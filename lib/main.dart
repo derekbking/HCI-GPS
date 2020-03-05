@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'floatin_search_bar.dart';
 import 'maps.dart';
+import 'menu.dart';
 
 void main() => runApp(MyApp());
 
@@ -69,39 +70,40 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.loose,
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          GoogleMap(),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ConstrainedBox(
-              constraints: BoxConstraints.tightFor(width: 500),
-                        child: NestedScrollView(
-                          headerSliverBuilder: (context, isInnerBoxScroll) {
-                            return [
-                              RoundedFloatingAppBar(
-                                elevation: 2,
-                                floating: true,
-                                snap: true,
-                                title: TextField(
-                                  textAlignVertical: TextAlignVertical.center,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.search),
-                                    border: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                            ];
-                          },
-                          body: Container(),
-                        ),
-            ),
-          ),
-        ],
-      ),// This trailing comma makes auto-formatting nicer for build methods.
-    );
+    return MainMenu();
+    // return Scaffold(
+    //   body: Stack(
+    //     fit: StackFit.loose,
+    //     alignment: Alignment.topCenter,
+    //     children: <Widget>[
+    //       MainMenu(),
+    //       Padding(
+    //         padding: const EdgeInsets.all(10.0),
+    //         child: ConstrainedBox(
+    //           constraints: BoxConstraints.tightFor(width: 500),
+    //           child: NestedScrollView(
+    //             headerSliverBuilder: (context, isInnerBoxScroll) {
+    //               return [
+    //                 RoundedFloatingAppBar(
+    //                   elevation: 2,
+    //                   floating: true,
+    //                   snap: true,
+    //                   title: TextField(
+    //                     textAlignVertical: TextAlignVertical.center,
+    //                     decoration: InputDecoration(
+    //                       prefixIcon: Icon(Icons.search),
+    //                       border: InputBorder.none,
+    //                     ),
+    //                   ),
+    //                 ),
+    //               ];
+    //             },
+    //             body: Container(),
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ), // This trailing comma makes auto-formatting nicer for build methods.
+    // );
   }
 }
