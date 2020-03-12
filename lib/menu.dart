@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hci_gps/maps.dart';
 
-class MainMenu extends StatefulWidget {
-  MainMenu({Key key}) : super(key: key);
+class MapMenu extends StatefulWidget {
+  MapMenu({Key key}) : super(key: key);
 
   @override
-  _MainMenuState createState() => _MainMenuState();
+  _MapMenuState createState() => _MapMenuState();
 }
 
-class _MainMenuState extends State<MainMenu> {
+class _MapMenuState extends State<MapMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,8 +31,10 @@ class _MainMenuState extends State<MainMenu> {
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: Text("or",
                         style: GoogleFonts.montserrat(
-                            textStyle:
-                                TextStyle(color: Colors.white, fontSize: 60, fontWeight: FontWeight.w100))),
+                            textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 60,
+                                fontWeight: FontWeight.w100))),
                   ),
                   Material(
                     borderRadius: BorderRadius.circular(12.0),

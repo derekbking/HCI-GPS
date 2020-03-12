@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hci_gps/music.dart';
 
+import 'clock.dart';
 import 'floatin_search_bar.dart';
 import 'maps.dart';
 import 'menu.dart';
@@ -11,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'HCI Team 13 GPS',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -64,46 +67,100 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return MainMenu();
-    // return Scaffold(
-    //   body: Stack(
-    //     fit: StackFit.loose,
-    //     alignment: Alignment.topCenter,
-    //     children: <Widget>[
-    //       MainMenu(),
-    //       Padding(
-    //         padding: const EdgeInsets.all(10.0),
-    //         child: ConstrainedBox(
-    //           constraints: BoxConstraints.tightFor(width: 500),
-    //           child: NestedScrollView(
-    //             headerSliverBuilder: (context, isInnerBoxScroll) {
-    //               return [
-    //                 RoundedFloatingAppBar(
-    //                   elevation: 2,
-    //                   floating: true,
-    //                   snap: true,
-    //                   title: TextField(
-    //                     textAlignVertical: TextAlignVertical.center,
-    //                     decoration: InputDecoration(
-    //                       prefixIcon: Icon(Icons.search),
-    //                       border: InputBorder.none,
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ];
-    //             },
-    //             body: Container(),
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ), // This trailing comma makes auto-formatting nicer for build methods.
-    // );
+    return Scaffold(
+        backgroundColor: Colors.blueGrey[900],
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Clock(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  _buildButton("Maps", Icons.location_on, MapMenu()),
+                  _buildButton("Music", Icons.library_music, MusicMenu()),
+                  _buildButton("Radio", Icons.radio, null)
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  _buildButton("", Icons.warning, null),
+                  _buildButton("", Icons.warning, null),
+                  _buildButton("", Icons.warning, null)
+                ],
+              ),
+              _buildDots()
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildButton(String title, IconData icon, Widget screen) {
+    return Padding(
+      padding: const EdgeInsets.all(30.0),
+      child: Column(
+        children: <Widget>[
+          Material(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(90),
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => screen));
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(50.0),
+                child: Icon(icon, size: 50, color: Colors.blueGrey[900]),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Text(title,
+                style: GoogleFonts.montserrat(
+                    textStyle: TextStyle(color: Colors.white, fontSize: 24))),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDots() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: SizedBox(
+              height: 4,
+              width: 4,
+              child: Material(
+                color: Colors.grey[500],
+                borderRadius: BorderRadius.circular(4),
+              )),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: SizedBox(
+              height: 4,
+              width: 4,
+              child: Material(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(4),
+              )),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: SizedBox(
+              height: 4,
+              width: 4,
+              child: Material(
+                color: Colors.grey[500],
+                borderRadius: BorderRadius.circular(4),
+              )),
+        )
+      ],
+    );
   }
 }
