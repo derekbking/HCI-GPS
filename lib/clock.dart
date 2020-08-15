@@ -63,9 +63,66 @@ class _ClockState extends State<Clock> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 50),
-      child: Text(hour.toString() + ":" + minute.toString() + " " + amPm,
-          style: GoogleFonts.montserrat(
-              textStyle: TextStyle(color: Colors.white, fontSize: 65))),
+      child: Column(
+        children: <Widget>[
+          RichText(
+            text: TextSpan(
+                text: hour.toString() +
+                    ":" +
+                    minute.toString() +
+                    " " +
+                    amPm +
+                    "  ",
+                style: GoogleFonts.montserrat(
+                  textStyle: TextStyle(color: Colors.white, fontSize: 28),
+                ),
+                children: [
+                  TextSpan(
+                    text: getDate(),
+                    style: GoogleFonts.montserrat(
+                      textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w200),
+                    ),
+                  ),
+                ]),
+          ),
+        ],
+      ),
     );
+  }
+
+  var dayMap = {
+    1: "Monday",
+    2: "Tuesday",
+    3: "Wednesday",
+    4: "Thursday",
+    5: "Friday",
+    6: "Saturday",
+    7: "Sunday"
+  };
+
+  var monthMap = {
+    1: "Janurary",
+    2: "Feburary",
+    3: "March",
+    4: "April",
+    5: "May",
+    6: "June",
+    7: "July",
+    8: "August",
+    9: "Septemeber",
+    10: "October",
+    11: "November",
+    12: "December",
+  };
+
+  String getDate() {
+    return dayMap[_dateTime.weekday] +
+        ", " +
+        monthMap[_dateTime.month] +
+        " " +
+        _dateTime.day.toString();
   }
 }

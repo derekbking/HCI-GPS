@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'clock.dart';
+
 class MusicMenu extends StatefulWidget {
   MusicMenu({Key key}) : super(key: key);
 
@@ -9,24 +11,83 @@ class MusicMenu extends StatefulWidget {
 }
 
 class _MusicMenuState extends State<MusicMenu> {
+  double value = 30;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.blueGrey[900],
-        body: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints.tightFor(width: 500),
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          ConstrainedBox(
+            constraints: BoxConstraints.tightFor(width: 400),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                _buildSongInfo(),
                 _buildSongName(),
+                SizedBox(
+                  height: 20,
+                ),
+                _buildAlbumCover(),
+                _buildProgressIndicator(),
                 _buildControls()
               ],
             ),
           ),
-        ));
+          SizedBox(width: 100),
+          ConstrainedBox(
+            constraints: BoxConstraints.tightFor(width: 400, height: 625),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Songs",
+                      style: GoogleFonts.montserrat(
+                          textStyle:
+                              TextStyle(color: Colors.white, fontSize: 26))),
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(height: 575),
+                  child: ListView(
+                    children: <Widget>[
+                      _buildSong(),
+                      _buildSong(),
+                      _buildSong(),
+                      _buildSong(),
+                      _buildSong(),
+                      _buildSong(),
+                      _buildSong(),
+                      _buildSong(),
+                      _buildSong(),
+                      _buildSong(),
+                      _buildSong(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSong() {
+    return Card(
+      child: ListTile(
+        onTap: () {},
+        contentPadding: EdgeInsets.all(8.0),
+        leading: Material(
+            borderRadius: BorderRadius.circular(6.0),
+            child: Image.asset("assets/album.jpg")),
+        title: Text("Heartless", style: TextStyle(fontSize: 32.0)),
+        subtitle:
+            Text("Miguel, Travis Scott", style: TextStyle(fontSize: 20.0)),
+        trailing: Icon(Icons.play_arrow),
+      ),
+    );
   }
 
   Widget _buildControls() {
@@ -40,10 +101,13 @@ class _MusicMenuState extends State<MusicMenu> {
               border: Border.all(
                 color: Colors.white.withOpacity(0.5),
               ),
-              color: Colors.grey[300]),
+              color: Colors.white),
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Icon(Icons.fast_rewind),
+            padding: const EdgeInsets.all(32.0),
+            child: Icon(
+              Icons.fast_rewind,
+              size: 30,
+            ),
           ),
         ),
         Container(
@@ -52,10 +116,13 @@ class _MusicMenuState extends State<MusicMenu> {
               border: Border.all(
                 color: Colors.white.withOpacity(0.5),
               ),
-              color: Colors.grey[300]),
+              color: Colors.white),
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Icon(Icons.pause),
+            padding: const EdgeInsets.all(32.0),
+            child: Icon(
+              Icons.pause,
+              size: 30,
+            ),
           ),
         ),
         Container(
@@ -64,27 +131,15 @@ class _MusicMenuState extends State<MusicMenu> {
               border: Border.all(
                 color: Colors.white.withOpacity(0.5),
               ),
-              color: Colors.grey[300]),
+              color: Colors.white),
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Icon(Icons.fast_forward),
+            padding: const EdgeInsets.all(32.0),
+            child: Icon(
+              Icons.fast_forward,
+              size: 30,
+            ),
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildSongInfo() {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Now Playing",
-              style: GoogleFonts.montserrat(
-                  textStyle: TextStyle(color: Colors.grey[300], fontSize: 18))),
-        ),
-        _buildAlbumCover(),
-        _buildProgressIndicator()
       ],
     );
   }
@@ -110,14 +165,14 @@ class _MusicMenuState extends State<MusicMenu> {
   }
 
   Widget _buildProgressIndicator() {
-    return SizedBox(
-      height: 6.0,
-      child: LinearProgressIndicator(
-        value: 0.3,
-        valueColor: AlwaysStoppedAnimation<Color>(
-          Color(0xFF7D9AFF),
-        ),
-        backgroundColor: Colors.grey.withOpacity(0.2),
+    return Slider(
+      min: 0,
+      max: 160,
+      value: value,
+      onChanged: (v) => setState(
+        () {
+          this.value = v;
+        },
       ),
     );
   }

@@ -1,11 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hci_gps/music.dart';
+import 'package:hci_gps/settings.dart';
 
 import 'clock.dart';
-import 'floatin_search_bar.dart';
-import 'maps.dart';
-import 'menu.dart';
+import 'navigation.dart';
 
 void main() => runApp(MyApp());
 
@@ -53,50 +53,139 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  PageController _controller;
+  double currentPage = 0;
+  Widget _selectedPage;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void initState() {
+    super.initState();
+
+    _controller = PageController()
+      ..addListener(() {
+        setState(() {
+          currentPage = _controller.page;
+        });
+      });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blueGrey[900],
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Clock(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _buildButton("Maps", Icons.location_on, MapMenu()),
-                  _buildButton("Music", Icons.library_music, MusicMenu()),
-                  _buildButton("Radio", Icons.radio, null)
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _buildButton("", Icons.warning, null),
-                  _buildButton("", Icons.warning, null),
-                  _buildButton("", Icons.warning, null)
-                ],
-              ),
-              _buildDots()
-            ],
-          ),
-        ));
+      backgroundColor: Colors.blueGrey[900],
+      appBar: AppBar(
+        backgroundColor: Colors.blueGrey[800],
+        title: Clock(),
+        leading: _selectedPage != null
+            ? IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  setState(() {
+                    _selectedPage = null;
+                  });
+                },
+              )
+            : null,
+        centerTitle: true,
+      ),
+      body: AnimatedSwitcher(
+        duration: Duration(milliseconds: 500),
+        child: _selectedPage == null ? _buildBody() : _selectedPage,
+        switchInCurve: Curves.easeInOut,
+        switchOutCurve: Curves.easeInOut,
+        transitionBuilder: (Widget child, Animation<double> animation) =>
+            SlideTransition(
+          child: child,
+          position: Tween<Offset>(
+            begin: const Offset(0, 2),
+            end: Offset.zero,
+          ).animate(animation),
+        ),
+      ),
+    );
   }
 
-  Widget _buildButton(String title, IconData icon, Widget screen) {
+  Widget _buildBody() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          ConstrainedBox(
+            constraints: BoxConstraints.tightFor(height: 600),
+            child: PageView(
+              controller: _controller,
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _buildButton("Navigation", Icons.navigation, MapMenu(),
+                            Colors.purple[600]),
+                        _buildButton("Music", Icons.library_music, MusicMenu(),
+                            Colors.blue[600]),
+                        _buildButton("Podcasts", Icons.audiotrack, null,
+                            Colors.indigo[600]),
+                        _buildButton(
+                            "Radio", Icons.radio, null, Colors.green[600])
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _buildButton(
+                            "Phone", Icons.phone, null, Colors.cyan[600]),
+                        _buildButton(
+                            "Messages", Icons.message, null, Colors.red[600]),
+                        _buildButton("Equalizer", Icons.equalizer, null,
+                            Colors.amber[600]),
+                        _buildButton(
+                            "Settings", Icons.settings, null, Colors.grey[600])
+                      ],
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _buildButton("TODO", Icons.work, MapMenu(),
+                            Colors.blueGrey[900]),
+                        _buildButton("TODO", Icons.work, MusicMenu(),
+                            Colors.blueGrey[900]),
+                        _buildButton(
+                            "TODO", Icons.work, null, Colors.blueGrey[900]),
+                        _buildButton(
+                            "TODO", Icons.work, null, Colors.blueGrey[900])
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        _buildButton(
+                            "TODO", Icons.work, null, Colors.blueGrey[900]),
+                        _buildButton(
+                            "TODO", Icons.work, null, Colors.blueGrey[900]),
+                        _buildButton(
+                            "TODO", Icons.work, null, Colors.blueGrey[900]),
+                        _buildButton(
+                            "TODO", Icons.work, null, Colors.blueGrey[900])
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          _buildDots()
+        ],
+      ),
+    );
+  }
+
+  Widget _buildButton(String title, IconData icon, Widget screen, Color color) {
     return Padding(
       padding: const EdgeInsets.all(30.0),
       child: Column(
@@ -106,12 +195,13 @@ class _MyHomePageState extends State<MyHomePage> {
             borderRadius: BorderRadius.circular(90),
             child: InkWell(
               onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => screen));
+                setState(() {
+                  _selectedPage = screen;
+                });
               },
               child: Padding(
                 padding: const EdgeInsets.all(50.0),
-                child: Icon(icon, size: 50, color: Colors.blueGrey[900]),
+                child: Icon(icon, size: 80, color: color),
               ),
             ),
           ),
@@ -127,40 +217,26 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildDots() {
+    List<Widget> dots = [];
+    for (int i = 0; i < 2; i++) {
+      dots.add(
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: SizedBox(
+              height: 20,
+              width: 20,
+              child: Material(
+                color:
+                    currentPage.round() == i ? Colors.white : Colors.grey[500],
+                borderRadius: BorderRadius.circular(20),
+              )),
+        ),
+      );
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: SizedBox(
-              height: 4,
-              width: 4,
-              child: Material(
-                color: Colors.grey[500],
-                borderRadius: BorderRadius.circular(4),
-              )),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: SizedBox(
-              height: 4,
-              width: 4,
-              child: Material(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(4),
-              )),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: SizedBox(
-              height: 4,
-              width: 4,
-              child: Material(
-                color: Colors.grey[500],
-                borderRadius: BorderRadius.circular(4),
-              )),
-        )
-      ],
+      children: dots,
     );
   }
 }
